@@ -3,6 +3,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Discord_Bot.Core.Data;
 using Discord_Bot.Modules.Channel_System;
+using System;
 
 namespace Discord_Bot.Modules.Logging_System
 {
@@ -231,9 +232,21 @@ namespace Discord_Bot.Modules.Logging_System
             var office = ChannelManager.GetTextChannel("🏰 Ty's Mansion", "🚬-ty’s-office");
             var acc = UserManager.GetAccount(user);
 
-            bool isBan = acc.modData.BanCount() != 0;
-            var unban = acc.modData.unBans[acc.modData.UnBanCount() - 1]; ;
-            var staff = guild.GetUser(unban.staff);
+
+            ModData.PenaltyData unBan = new ModData.PenaltyData();
+            SocketGuildUser staff = null;
+
+            try
+            {
+                unBan = acc.modData.unBans[acc.modData.UnBanCount() - 1]; ;
+                staff = guild.GetUser(unBan.staff);
+            }
+            catch
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"{DateTime.Now.ToShortTimeString()} | [Discord] : Could not retrieve UnBan data for {user.Username}.");
+                Console.ResetColor();
+            }
 
             var embed = new EmbedBuilder();
             var author = new EmbedAuthorBuilder();
@@ -259,13 +272,13 @@ namespace Discord_Bot.Modules.Logging_System
             var f1 = new EmbedFieldBuilder();
             f1.WithIsInline(true);
             f1.WithName("UnBanned By");
-            f1.WithValue($"{staff.Mention}");
+            f1.WithValue($"{(staff == null ? staff.Mention : "")}");
             embed.AddField(f1);
 
             var f2 = new EmbedFieldBuilder();
             f2.WithIsInline(false);
             f2.WithName("Reason");
-            f2.WithValue(unban.reason);
+            f2.WithValue(unBan.reason);
             embed.AddField(f2);
 
             await logs.SendMessageAsync("", false, embed.Build());
