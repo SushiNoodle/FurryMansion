@@ -147,71 +147,18 @@ namespace Discord_Bot
             await arg.AddRoleAsync(await RoleManager.GetOrCreateRoleAsync($"{Utilities.GetMonth()} {DateTime.Today.Year}"));
             Core.Moderation.Verification.Add(arg);
 
-            LoggingManager.LogJoin(arg);
+            LoggingManager.LogUserJoined(arg);
         }
 
         private async Task _client_UserBanned(SocketUser arg1, SocketGuild arg2)
         {
             Verification.Remove((SocketGuildUser)arg1);
-            LoggingManager.LogBan((SocketGuildUser)arg1);
+            LoggingManager.LogUserBanned((SocketGuildUser)arg1);
         }
 
         private async Task _client_UserLeft(SocketGuildUser arg)
         {
-            var logs = ChannelManager.GetTextChannel("🏰 Ty's Mansion", "📋-joins-and-leaves");
-
-            var embed = new EmbedBuilder();
-            var author = new EmbedAuthorBuilder();
-            var footer = new EmbedFooterBuilder();
-
-            author.WithName("Member Left");
-            author.WithIconUrl(arg.GetAvatarUrl());
-            embed.WithAuthor(author);
-
-            footer.WithText($"ID: {arg.Id}");
-            embed.WithFooter(footer);
-
-            embed.WithCurrentTimestamp();
-            embed.WithColor(Color.Red);
-            embed.WithThumbnailUrl(arg.GetAvatarUrl());
-
-            var f0 = new EmbedFieldBuilder();
-            f0.WithIsInline(true);
-            f0.WithName("User");
-            f0.WithValue($"{arg.Mention}");
-            embed.AddField(f0);
-
-            var f1 = new EmbedFieldBuilder();
-            f1.WithIsInline(true);
-            f1.WithName("Acc Created At");
-            f1.WithValue($"{arg.CreatedAt.Day} {Utilities.GetMonth(arg.CreatedAt.Month)} {arg.CreatedAt.Year}");
-            embed.AddField(f1);
-
-            await logs.SendMessageAsync("", false, embed.Build());
-
-            Core.Moderation.Verification.Remove(arg);
-
-            var intro = ChannelManager.GetTextChannel("🐾 Plebs", "🌞-introductions");
-            var intro_msgs = await intro.GetMessagesAsync().FlattenAsync();
-            foreach (var msg in intro_msgs)
-            {
-                if (msg.Content.Contains(arg.Mention))
-                {
-                    await msg.DeleteAsync();
-                    break;
-                }
-            }
-
-            var fursona = ChannelManager.GetTextChannel("🦄 Roleplay", "🐾-fursonas");
-            var fursona_msgs = await fursona.GetMessagesAsync().FlattenAsync();
-            foreach (var msg in fursona_msgs)
-            {
-                if (msg.Content.Contains(arg.Mention))
-                {
-                    await msg.DeleteAsync();
-                    break;
-                }
-            }
+            LoggingManager.LogUserLeft(arg);
         }
 
         private async Task _client_GuildUpdated(SocketGuild arg1, SocketGuild arg2)

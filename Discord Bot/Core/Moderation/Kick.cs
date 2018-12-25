@@ -3,6 +3,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Discord_Bot.Core.Data;
 using Discord_Bot.Modules.Channel_System;
+using Discord_Bot.Modules.Logging_System;
 using Discord_Bot.Modules.Role_System;
 using System;
 using System.Linq;
@@ -25,7 +26,10 @@ namespace Discord_Bot.Core.Moderation
                 await (await user.GetOrCreateDMChannelAsync()).SendMessageAsync($"You have been kicked from **{Context.Guild.Name}** for  `{r}`.");
 
                 UserManager.SaveAccounts();
+                LoggingManager.LogUserKicked((SocketGuildUser)user);
                 await user.KickAsync();
+
+
             }
         }
 
