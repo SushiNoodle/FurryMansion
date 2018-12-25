@@ -13,7 +13,7 @@ namespace Discord_Bot.Modules.Logging_System
 {
     internal static class LoggingManager
     {
-        public static async void OnJoin(SocketGuildUser arg)
+        public static async void LogJoin(SocketGuildUser user)
         {
             var logs = ChannelManager.GetTextChannel("🏰 Ty's Mansion", "📋-joins-and-leaves");
 
@@ -22,31 +22,31 @@ namespace Discord_Bot.Modules.Logging_System
             var footer = new EmbedFooterBuilder();
 
             author.WithName("Member Joined");
-            author.WithIconUrl(arg.GetAvatarUrl());
+            author.WithIconUrl(user.GetAvatarUrl());
             embed.WithAuthor(author);
 
-            footer.WithText($"ID: {arg.Id}");
+            footer.WithText($"ID: {user.Id}");
             embed.WithFooter(footer);
 
             embed.WithCurrentTimestamp();
             embed.WithColor(Color.Green);
-            embed.WithThumbnailUrl(arg.GetAvatarUrl());
+            embed.WithThumbnailUrl(user.GetAvatarUrl());
 
             var f0 = new EmbedFieldBuilder();
             f0.WithIsInline(true);
             f0.WithName("User");
-            f0.WithValue($"{arg.Mention}");
+            f0.WithValue($"{user.Mention}");
             embed.AddField(f0);
 
             var f1 = new EmbedFieldBuilder();
             f1.WithIsInline(true);
             f1.WithName("Acc Created At");
-            f1.WithValue($"{arg.CreatedAt.Day} {Utilities.GetMonth(arg.CreatedAt.Month)} {arg.CreatedAt.Year}");
+            f1.WithValue($"{user.CreatedAt.Day} {Utilities.GetMonth(user.CreatedAt.Month)} {user.CreatedAt.Year}");
             embed.AddField(f1);
 
-            if (UserManager.AccountExists(arg))
+            if (UserManager.AccountExists(user))
             {
-                var acc = UserManager.GetAccount(arg);
+                var acc = UserManager.GetAccount(user);
 
                 var f2 = new EmbedFieldBuilder();
                 f2.WithIsInline(true);
@@ -80,6 +80,51 @@ namespace Discord_Bot.Modules.Logging_System
             }
 
             await logs.SendMessageAsync("", false, embed.Build());
+        }
+
+        public static async void LogBan(SocketGuildUser user)
+        {
+            var office = ChannelManager.GetTextChannel("🏰 Ty's Mansion", "🚬-ty’s-office");
+            var acc = UserManager.GetAccount(user);
+
+            bool isBan = acc.modData.BanCount() != 0;
+            var ban = isBan ? acc.modData.bans[acc.modData.BanCount() - 1] : acc.modData.softBans[acc.modData.SoftBanCount() - 1];
+            var staff = user.Guild.GetUser(ban.staff);
+
+            var embed = new EmbedBuilder();
+            var author = new EmbedAuthorBuilder();
+            var footer = new EmbedFooterBuilder();
+
+            author.WithName("Member Banned");
+            author.WithIconUrl(user.GetAvatarUrl());
+            embed.WithAuthor(author);
+
+            footer.WithText($"ID: {user.Id}");
+            embed.WithFooter(footer);
+
+            embed.WithCurrentTimestamp();
+            embed.WithColor(Color.DarkRed);
+            embed.WithThumbnailUrl(user.GetAvatarUrl());
+
+            var f0 = new EmbedFieldBuilder();
+            f0.WithIsInline(true);
+            f0.WithName("User");
+            f0.WithValue($"{user.Mention}");
+            embed.AddField(f0);
+
+            var f1 = new EmbedFieldBuilder();
+            f1.WithIsInline(true);
+            f1.WithName("Banned By");
+            f1.WithValue($"{staff.Mention}");
+            embed.AddField(f1);
+
+            var f2 = new EmbedFieldBuilder();
+            f2.WithIsInline(false);
+            f2.WithName("Reason");
+            f2.WithValue(ban.reason);
+            embed.AddField(f2);
+
+            await office.SendMessageAsync("", false, embed.Build());
         }
     }
 }
