@@ -74,7 +74,7 @@ namespace Discord_Bot.Core.Moderation
         }
 
         [Command("unban")]
-        public async Task UnBan(ulong userId)
+        public async Task UnBan(ulong userId, [Remainder]string reason = "")
         {
             if (RoleManager.HasAdminRole((SocketGuildUser)Context.User))
             {
@@ -88,6 +88,8 @@ namespace Discord_Bot.Core.Moderation
                         {
                             if (acc.id == userId)
                             {
+                                string r = reason == "" ? "No reason specified" : reason;
+                                acc.modData.unBans.Add(new ModData.PenaltyData(Context.User.Id, Utilities.GetDate(), r));
                                 acc.modData.banned = false;
                                 UserManager.SaveAccounts();
                                 break;

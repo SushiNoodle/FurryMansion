@@ -46,6 +46,7 @@ namespace Discord_Bot
             _client.UserJoined += _client_UserJoined;
             _client.UserLeft += _client_UserLeft;
             _client.UserBanned += _client_UserBanned;
+            _client.UserUnbanned += _client_UserUnbanned;
 
             _client.RoleCreated += _client_RoleCreated;
             _client.RoleDeleted += _client_RoleDeleted;
@@ -153,7 +154,12 @@ namespace Discord_Bot
         private async Task _client_UserBanned(SocketUser arg1, SocketGuild arg2)
         {
             Verification.Remove((SocketGuildUser)arg1);
-            LoggingManager.LogUserBanned((SocketGuildUser)arg1);
+            LoggingManager.LogUserBanned(arg1, arg2);
+        }
+
+        private async Task _client_UserUnbanned(SocketUser arg1, SocketGuild arg2)
+        {
+            LoggingManager.LogUserUnBanned(arg1, arg2);
         }
 
         private async Task _client_UserLeft(SocketGuildUser arg)

@@ -4,6 +4,7 @@ using Discord.Rest;
 using Discord.WebSocket;
 using Discord_Bot.Core.Data;
 using Discord_Bot.Modules.Channel_System;
+using Discord_Bot.Modules.Logging_System;
 using Discord_Bot.Modules.Role_System;
 using System;
 using System.Collections.Generic;
@@ -301,7 +302,7 @@ namespace Discord_Bot.Core.Moderation
                                     var channel = await user.GetOrCreateDMChannelAsync();
                                     await channel.SendMessageAsync($"You have been softbanned from **{guild.Name}** for  `{r}`.");
                                     await guild.AddBanAsync(user, 1, r);
-
+                                    await guild.RemoveBanAsync(user);
                                     break;
                                 }
 
@@ -315,7 +316,8 @@ namespace Discord_Bot.Core.Moderation
                                     var channel = await user.GetOrCreateDMChannelAsync();
                                     await channel.SendMessageAsync($"You have been kicked from **{guild.Name}** for  `{r}`.");
 
-                                    
+                                    LoggingManager.LogUserKicked((SocketGuildUser)user);
+
                                     await guild.GetUser(user.Id).KickAsync();
 
                                     break;
@@ -323,6 +325,8 @@ namespace Discord_Bot.Core.Moderation
 
                             case request.UnBan :
                                 {
+                                    string r = reason == "" ? "No reason specified" : reason;
+
                                     var bans = await guild.GetBansAsync();
 
                                     var bansearch = from b in bans
@@ -337,6 +341,7 @@ namespace Discord_Bot.Core.Moderation
                                         break;
                                     }
 
+                                    acc.modData.unBans.Add(new ModData.PenaltyData(user.Id, Utilities.GetDate(), reason));
                                     acc.modData.banned = false;
                                     UserManager.SaveAccounts();
 
@@ -363,7 +368,7 @@ namespace Discord_Bot.Core.Moderation
                                 }
                         }
 
-                        Voting.StaffVotes.Remove(vote);
+                        StaffVotes.Remove(vote);
 
                         try { await vote.DeleteAsync(); }
                         catch { return; }
