@@ -1,0 +1,18 @@
+{
+	"TEST": "Hello World",
+	
+	"WELCOME_&NAME_&SERVERNAME": "Hello {0} and welcome to {1}!",
+	
+	"TwitchTv": "https://www.twitch.tv/zalikalol",
+	"Twitter": "https://twitter.com/zalikalol",
+	"Reddit": "https://www.reddit.com/user/ZalikaLoL",
+	"MOBAFire": "https://www.mobafire.com/profile/zalika-823158",
+	
+	"GUIDE": "https://bit.ly/2KiL1N9",
+	
+	"TwitchTv_ICON": "https://static-cdn.jtvnw.net/jtv_user_pictures/850b75ce-b10a-4181-842b-4213e8373043-profile_image-300x300.jpg",
+	"Twitter_ICON": "https://pbs.twimg.com/profile_images/993714373561667584/YZOD3b0u_400x400.jpg",
+	"MOBAFire_ICON": "https://pbs.twimg.com/profile_images/459072318862405633/Nfr_HQQ8.png",
+	
+	"STREAM_STATUS": "`offline`"
+}
