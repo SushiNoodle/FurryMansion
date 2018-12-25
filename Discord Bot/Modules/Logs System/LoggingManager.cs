@@ -3,11 +3,6 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Discord_Bot.Core.Data;
 using Discord_Bot.Modules.Channel_System;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Discord_Bot.Modules.Logging_System
 {
@@ -139,7 +134,7 @@ namespace Discord_Bot.Modules.Logging_System
             }
         }
 
-        public static async void LogUserBanned(SocketGuildUser user)
+        public static async void LogUserBanned(SocketUser user, SocketGuild guild)
         {
             var logs = ChannelManager.GetTextChannel("🏰 Ty's Mansion", "📝-logging");
             var office = ChannelManager.GetTextChannel("🏰 Ty's Mansion", "🚬-ty’s-office");
@@ -147,7 +142,7 @@ namespace Discord_Bot.Modules.Logging_System
 
             bool isBan = acc.modData.BanCount() != 0;
             var ban = isBan ? acc.modData.bans[acc.modData.BanCount() - 1] : acc.modData.softBans[acc.modData.SoftBanCount() - 1];
-            var staff = user.Guild.GetUser(ban.staff);
+            var staff = guild.GetUser(ban.staff);
 
             var embed = new EmbedBuilder();
             var author = new EmbedAuthorBuilder();
@@ -230,9 +225,51 @@ namespace Discord_Bot.Modules.Logging_System
             await office.SendMessageAsync("", false, embed.Build());
             await logs.SendMessageAsync("", false, embed.Build());
         }
-        public static async void LogUserUnBanned(SocketGuildUser user)
+        public static async void LogUserUnBanned(SocketUser user, SocketGuild guild)
         {
+            var logs = ChannelManager.GetTextChannel("🏰 Ty's Mansion", "📝-logging");
+            var office = ChannelManager.GetTextChannel("🏰 Ty's Mansion", "🚬-ty’s-office");
+            var acc = UserManager.GetAccount(user);
 
+            bool isBan = acc.modData.BanCount() != 0;
+            var unban = acc.modData.unBans[acc.modData.UnBanCount() - 1]; ;
+            var staff = guild.GetUser(unban.staff);
+
+            var embed = new EmbedBuilder();
+            var author = new EmbedAuthorBuilder();
+            var footer = new EmbedFooterBuilder();
+
+            author.WithName("Member UnBanned");
+            author.WithIconUrl(user.GetAvatarUrl());
+            embed.WithAuthor(author);
+
+            footer.WithText($"ID: {user.Id}");
+            embed.WithFooter(footer);
+
+            embed.WithCurrentTimestamp();
+            embed.WithColor(Color.Green);
+            embed.WithThumbnailUrl(user.GetAvatarUrl());
+
+            var f0 = new EmbedFieldBuilder();
+            f0.WithIsInline(true);
+            f0.WithName("User");
+            f0.WithValue($"{user.Mention}");
+            embed.AddField(f0);
+
+            var f1 = new EmbedFieldBuilder();
+            f1.WithIsInline(true);
+            f1.WithName("UnBanned By");
+            f1.WithValue($"{staff.Mention}");
+            embed.AddField(f1);
+
+            var f2 = new EmbedFieldBuilder();
+            f2.WithIsInline(false);
+            f2.WithName("Reason");
+            f2.WithValue(unban.reason);
+            embed.AddField(f2);
+
+            await logs.SendMessageAsync("", false, embed.Build());
+            await office.SendMessageAsync("", false, embed.Build());
         }
     }
 }

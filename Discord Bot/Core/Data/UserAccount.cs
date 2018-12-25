@@ -149,11 +149,18 @@ namespace Discord_Bot.Core.Data
             catch { return 0; }
         }
 
+        public int UnBanCount()
+        {
+            try { return unBans.Count; }
+            catch { return 0; }
+        }
+
         public List<PenaltyData> warnings;
         public List<MuteData> mutes;
         public List<PenaltyData> kicks;
         public List<PenaltyData> softBans;
         public List<PenaltyData> bans;
+        public List<PenaltyData> unBans;
         public bool banned;
 
         public struct PenaltyData
