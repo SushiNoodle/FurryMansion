@@ -147,54 +147,13 @@ namespace Discord_Bot
             await arg.AddRoleAsync(await RoleManager.GetOrCreateRoleAsync($"{Utilities.GetMonth()} {DateTime.Today.Year}"));
             Core.Moderation.Verification.Add(arg);
 
-            LoggingManager.OnJoin(arg);
+            LoggingManager.LogJoin(arg);
         }
 
         private async Task _client_UserBanned(SocketUser arg1, SocketGuild arg2)
         {
             Verification.Remove((SocketGuildUser)arg1);
-
-            var office = ChannelManager.GetTextChannel("🏰 Ty's Mansion", "🚬-ty’s-office");
-            var acc = UserManager.GetAccount(arg1);
-
-            bool isBan = acc.modData.BanCount() != 0;
-            var ban = isBan ? acc.modData.bans[acc.modData.BanCount() - 1] : acc.modData.softBans[acc.modData.SoftBanCount() - 1];
-            var staff = arg2.GetUser(ban.staff);
-
-            var embed = new EmbedBuilder();
-            var author = new EmbedAuthorBuilder();
-            var footer = new EmbedFooterBuilder();
-
-            author.WithName("Member Banned");
-            author.WithIconUrl(arg1.GetAvatarUrl());
-            embed.WithAuthor(author);
-
-            footer.WithText($"ID: {arg1.Id}");
-            embed.WithFooter(footer);
-
-            embed.WithCurrentTimestamp();
-            embed.WithColor(Color.DarkRed);
-            embed.WithThumbnailUrl(arg1.GetAvatarUrl());
-
-            var f0 = new EmbedFieldBuilder();
-            f0.WithIsInline(true);
-            f0.WithName("User");
-            f0.WithValue($"{arg1.Mention}");
-            embed.AddField(f0);
-
-            var f1 = new EmbedFieldBuilder();
-            f1.WithIsInline(true);
-            f1.WithName("Banned By");
-            f1.WithValue($"{staff.Mention}");
-            embed.AddField(f1);
-
-            var f2 = new EmbedFieldBuilder();
-            f2.WithIsInline(false);
-            f2.WithName("Reason");
-            f2.WithValue(ban.reason);
-            embed.AddField(f2);
-
-            await office.SendMessageAsync("", false, embed.Build());
+            LoggingManager.LogBan((SocketGuildUser)arg1);
         }
 
         private async Task _client_UserLeft(SocketGuildUser arg)
