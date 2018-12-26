@@ -361,13 +361,13 @@ namespace Discord_Bot.Modules.Logging_System
             var f1 = new EmbedFieldBuilder();
             f1.WithIsInline(true);
             f1.WithName("UnBanned By");
-            f1.WithValue($"{(staff == null ? staff.Mention : "")}");
+            f1.WithValue($"{(staff == null ? "Staff not found" : staff.Mention)}");
             embed.AddField(f1);
 
             var f2 = new EmbedFieldBuilder();
             f2.WithIsInline(false);
             f2.WithName("Reason");
-            f2.WithValue(unBan.reason);
+            f2.WithValue((unBan.reason == null ? "No reason specified" : unBan.reason));
             embed.AddField(f2);
 
             await logs.SendMessageAsync("", false, embed.Build());
