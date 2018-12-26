@@ -4,6 +4,7 @@ using Discord.WebSocket;
 using Discord_Bot.Core.Data;
 using Discord_Bot.Modules.Channel_System;
 using Discord_Bot.Modules.Role_System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -88,8 +89,18 @@ namespace Discord_Bot.Core.Moderation
                         {
                             if (acc.id == userId)
                             {
-                                string r = reason == "" ? "No reason specified" : reason;
-                                acc.modData.unBans.Add(new ModData.PenaltyData(Context.User.Id, Utilities.GetDate(), r));
+                                try
+                                {
+                                    string r = reason == "" ? "No reason specified" : reason;
+                                    acc.modData.unBans.Add(new ModData.PenaltyData(Context.User.Id, Utilities.GetDate(), r));
+                                }
+                                catch
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Red;
+                                    Console.WriteLine($"{DateTime.Now.ToShortTimeString()} | [Discord] : Could not write UnBan data for {ban.User.Username}.");
+                                    Console.ResetColor();
+                                }
+
                                 acc.modData.banned = false;
                                 UserManager.SaveAccounts();
                                 break;
