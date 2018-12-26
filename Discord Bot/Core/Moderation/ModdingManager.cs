@@ -275,12 +275,12 @@ namespace Discord_Bot.Core.Moderation
 
                         var guild = Global.Client.GetGuild(Global.GuildID);
 
+                        string r = reason == "" ? "No reason specified" : reason;
+
                         switch (Enum.Parse(typeof(request), type))
                         {
                             case request.Ban :
                                 {
-                                    string r = reason == "" ? "No reason specified" : reason;
-                                    
                                     acc.modData.bans.Add(new ModData.PenaltyData(staff.Id, Utilities.GetDate(), r));
                                     acc.modData.banned = true;
                                     UserManager.SaveAccounts();
@@ -294,8 +294,6 @@ namespace Discord_Bot.Core.Moderation
                                 
                             case request.SoftBan :
                                 {
-                                    string r = reason == "" ? "No reason specified" : reason;
-
                                     acc.modData.softBans.Add(new ModData.PenaltyData(staff.Id, Utilities.GetDate(), r));
                                     UserManager.SaveAccounts();
 
@@ -308,8 +306,6 @@ namespace Discord_Bot.Core.Moderation
 
                             case request.Kick :
                                 {
-                                    string r = reason == "" ? "No reason specified" : reason;
-
                                     acc.modData.kicks.Add(new ModData.PenaltyData(staff.Id, Utilities.GetDate(), r));
                                     UserManager.SaveAccounts();
 
@@ -325,8 +321,6 @@ namespace Discord_Bot.Core.Moderation
 
                             case request.UnBan :
                                 {
-                                    string r = reason == "" ? "No reason specified" : reason;
-
                                     var bans = await guild.GetBansAsync();
 
                                     var bansearch = from b in bans
@@ -359,6 +353,9 @@ namespace Discord_Bot.Core.Moderation
                                     {
                                         acc.modData.warnings.RemoveAt(acc.modData.warnings.Count - 1);
                                         UserManager.SaveAccounts();
+                                        
+                                        LoggingManager.LogUserUnWarned((SocketGuildUser)user, (SocketGuildUser)staff, r);
+
                                         await office.SendMessageAsync($"{user.Mention} got a warning removed, they now have `{acc.modData.warnings.Count}` warnings.");
                                     }
                                     else

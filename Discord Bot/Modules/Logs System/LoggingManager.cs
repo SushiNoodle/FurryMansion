@@ -135,6 +135,140 @@ namespace Discord_Bot.Modules.Logging_System
             }
         }
 
+        public static async void LogUserWarned(SocketGuildUser user)
+        {
+
+            var logs = ChannelManager.GetTextChannel("🏰 Ty's Mansion", "📝-logging");
+            var office = ChannelManager.GetTextChannel("🏰 Ty's Mansion", "🚬-ty’s-office");
+            var acc = UserManager.GetAccount(user);
+
+            var warn = acc.modData.warnings[acc.modData.WarnCount() - 1];
+            var staff = user.Guild.GetUser(warn.staff);
+
+            var embed = new EmbedBuilder();
+            var author = new EmbedAuthorBuilder();
+            var footer = new EmbedFooterBuilder();
+
+            author.WithName("Member Warned");
+            author.WithIconUrl(user.GetAvatarUrl());
+            embed.WithAuthor(author);
+
+            footer.WithText($"ID: {user.Id}");
+            embed.WithFooter(footer);
+
+            embed.WithCurrentTimestamp();
+            embed.WithColor(Color.Red);
+            embed.WithThumbnailUrl(user.GetAvatarUrl());
+
+            var f0 = new EmbedFieldBuilder();
+            f0.WithIsInline(true);
+            f0.WithName("User");
+            f0.WithValue($"{user.Mention}");
+            embed.AddField(f0);
+
+            var f1 = new EmbedFieldBuilder();
+            f1.WithIsInline(true);
+            f1.WithName("Warned By");
+            f1.WithValue($"{staff.Mention}");
+            embed.AddField(f1);
+
+            var f2 = new EmbedFieldBuilder();
+            f2.WithIsInline(false);
+            f2.WithName("Reason");
+            f2.WithValue(warn.reason);
+            embed.AddField(f2);
+
+            await office.SendMessageAsync("", false, embed.Build());
+            await logs.SendMessageAsync("", false, embed.Build());
+        }
+        public static async void LogUserUnWarned(SocketGuildUser user, SocketGuildUser staff, string reason)
+        {
+            var logs = ChannelManager.GetTextChannel("🏰 Ty's Mansion", "📝-logging");
+            var office = ChannelManager.GetTextChannel("🏰 Ty's Mansion", "🚬-ty’s-office");
+            var acc = UserManager.GetAccount(user);
+
+            var embed = new EmbedBuilder();
+            var author = new EmbedAuthorBuilder();
+            var footer = new EmbedFooterBuilder();
+
+            author.WithName("Member UnWarned");
+            author.WithIconUrl(user.GetAvatarUrl());
+            embed.WithAuthor(author);
+
+            footer.WithText($"ID: {user.Id}");
+            embed.WithFooter(footer);
+
+            embed.WithCurrentTimestamp();
+            embed.WithColor(Color.Orange);
+            embed.WithThumbnailUrl(user.GetAvatarUrl());
+
+            var f0 = new EmbedFieldBuilder();
+            f0.WithIsInline(true);
+            f0.WithName("User");
+            f0.WithValue($"{user.Mention}");
+            embed.AddField(f0);
+
+            var f1 = new EmbedFieldBuilder();
+            f1.WithIsInline(true);
+            f1.WithName("UnWarned By");
+            f1.WithValue($"{staff.Mention}");
+            embed.AddField(f1);
+
+            var f2 = new EmbedFieldBuilder();
+            f2.WithIsInline(false);
+            f2.WithName("Reason");
+            f2.WithValue(reason);
+            embed.AddField(f2);
+
+            await office.SendMessageAsync("", false, embed.Build());
+            await logs.SendMessageAsync("", false, embed.Build());
+        }
+
+        public static async void LogUserKicked(SocketGuildUser user)
+        {
+            var logs = ChannelManager.GetTextChannel("🏰 Ty's Mansion", "📝-logging");
+            var office = ChannelManager.GetTextChannel("🏰 Ty's Mansion", "🚬-ty’s-office");
+            var acc = UserManager.GetAccount(user);
+
+            var kick = acc.modData.kicks[acc.modData.KickCount() - 1];
+            var staff = user.Guild.GetUser(kick.staff);
+
+            var embed = new EmbedBuilder();
+            var author = new EmbedAuthorBuilder();
+            var footer = new EmbedFooterBuilder();
+
+            author.WithName("Member Kicked");
+            author.WithIconUrl(user.GetAvatarUrl());
+            embed.WithAuthor(author);
+
+            footer.WithText($"ID: {user.Id}");
+            embed.WithFooter(footer);
+
+            embed.WithCurrentTimestamp();
+            embed.WithColor(Color.DarkRed);
+            embed.WithThumbnailUrl(user.GetAvatarUrl());
+
+            var f0 = new EmbedFieldBuilder();
+            f0.WithIsInline(true);
+            f0.WithName("User");
+            f0.WithValue($"{user.Mention}");
+            embed.AddField(f0);
+
+            var f1 = new EmbedFieldBuilder();
+            f1.WithIsInline(true);
+            f1.WithName("Kicked By");
+            f1.WithValue($"{staff.Mention}");
+            embed.AddField(f1);
+
+            var f2 = new EmbedFieldBuilder();
+            f2.WithIsInline(false);
+            f2.WithName("Reason");
+            f2.WithValue(kick.reason);
+            embed.AddField(f2);
+
+            await office.SendMessageAsync("", false, embed.Build());
+            await logs.SendMessageAsync("", false, embed.Build());
+        }
         public static async void LogUserBanned(SocketUser user, SocketGuild guild)
         {
             var logs = ChannelManager.GetTextChannel("🏰 Ty's Mansion", "📝-logging");
@@ -180,51 +314,6 @@ namespace Discord_Bot.Modules.Logging_System
 
             await logs.SendMessageAsync("", false, embed.Build());
             await office.SendMessageAsync("", false, embed.Build());
-        }
-        public static async void LogUserKicked(SocketGuildUser user)
-        {
-            var logs = ChannelManager.GetTextChannel("🏰 Ty's Mansion", "📝-logging");
-            var office = ChannelManager.GetTextChannel("🏰 Ty's Mansion", "🚬-ty’s-office");
-            var acc = UserManager.GetAccount(user);
-
-            var kick = acc.modData.kicks[acc.modData.KickCount() - 1];
-            var staff = user.Guild.GetUser(kick.staff);
-
-            var embed = new EmbedBuilder();
-            var author = new EmbedAuthorBuilder();
-            var footer = new EmbedFooterBuilder();
-
-            author.WithName("Member Kicked");
-            author.WithIconUrl(user.GetAvatarUrl());
-            embed.WithAuthor(author);
-
-            footer.WithText($"ID: {user.Id}");
-            embed.WithFooter(footer);
-
-            embed.WithCurrentTimestamp();
-            embed.WithColor(Color.DarkRed);
-            embed.WithThumbnailUrl(user.GetAvatarUrl());
-
-            var f0 = new EmbedFieldBuilder();
-            f0.WithIsInline(true);
-            f0.WithName("User");
-            f0.WithValue($"{user.Mention}");
-            embed.AddField(f0);
-
-            var f1 = new EmbedFieldBuilder();
-            f1.WithIsInline(true);
-            f1.WithName("Kicked By");
-            f1.WithValue($"{staff.Mention}");
-            embed.AddField(f1);
-
-            var f2 = new EmbedFieldBuilder();
-            f2.WithIsInline(false);
-            f2.WithName("Reason");
-            f2.WithValue(kick.reason);
-            embed.AddField(f2);
-
-            await office.SendMessageAsync("", false, embed.Build());
-            await logs.SendMessageAsync("", false, embed.Build());
         }
         public static async void LogUserUnBanned(SocketUser user, SocketGuild guild)
         {

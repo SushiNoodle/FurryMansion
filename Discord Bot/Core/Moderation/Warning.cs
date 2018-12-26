@@ -3,6 +3,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Discord_Bot.Core.Data;
 using Discord_Bot.Modules.Channel_System;
+using Discord_Bot.Modules.Logging_System;
 using Discord_Bot.Modules.Role_System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,19 +21,16 @@ namespace Discord_Bot.Core.Moderation
                 string r = reason == "" ? "No reason specified" : reason;
                 var acc = UserManager.GetAccount((SocketUser)user);
                 acc.modData.warnings.Add(new ModData.PenaltyData(Context.User.Id, Utilities.GetDate(), r));
+                UserManager.SaveAccounts();
+
+                LoggingManager.LogUserWarned((SocketGuildUser)user);
 
                 if (acc.modData.warnings.Count >= 3)
-                {
-                    Voting.AddVote((SocketGuildUser)Context.User, "3 Warn Ban", (SocketGuildUser)user, reason);
-
-                    var channel = ChannelManager.GetTextChannel("🏰 Ty's Mansion", "⛓-basement-cell");
-                    await channel.SendMessageAsync($"{user.Mention} has been banned for getting 3 warnings and `{r}`.");
-                    await Context.Guild.AddBanAsync(user, 0, reason);
-                }
+                    Voting.AddVote((SocketGuildUser)Context.User, "Ban", (SocketGuildUser)user, "3 Warnings : " + reason);
                 else
                     await Context.Channel.SendMessageAsync($"{user.Mention} has been warned for `{r}`. They now have `{acc.modData.warnings.Count}` warnings.");
 
-                UserManager.SaveAccounts();
+                
             }
         }
 
@@ -52,7 +50,7 @@ namespace Discord_Bot.Core.Moderation
         }
 
         [Command("unwarn")]
-        public async Task UnWarn(IGuildUser user)
+        public async Task UnWarn(IGuildUser user, [Remainder]string reason = "")
         {
             if (RoleManager.HasAdminRole((SocketGuildUser)Context.User))
             {
@@ -61,6 +59,10 @@ namespace Discord_Bot.Core.Moderation
                 {
                     acc.modData.warnings.RemoveAt(acc.modData.warnings.Count - 1);
                     UserManager.SaveAccounts();
+
+                    string r = reason == "" ? "No reason specified" : reason;
+                    LoggingManager.LogUserUnWarned((SocketGuildUser)user, (SocketGuildUser)Context.User, r);
+
                     await Context.Channel.SendMessageAsync($"{user.Mention} got a warning removed, they now have `{acc.modData.warnings.Count}` warnings.");
                 }
                 else
