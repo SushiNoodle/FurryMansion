@@ -73,10 +73,42 @@ namespace Discord_Bot.Core.Moderation
 
         }
 
+        public static async void ClearLists()
+        {
+            var office = ChannelManager.GetTextChannel("🏰 Ty's Mansion", "🚬-ty’s-office");
+
+            var bot = office.GetUser(Global.DiscordBotID);
+            var messages = await office.GetMessagesAsync(100).FlattenAsync();
+
+            foreach (IUserMessage msg in messages)
+            {
+                if (msg.Author.Id != bot.Id)
+                    continue;
+
+                if (msg.IsPinned)
+                {
+                    if (msg.Id == ToDoMessage.Id)
+                        continue;
+
+                    var result = from f in msg.Embeds
+                                 where f.Title == "Ty's To Do List"
+                                 select f;
+
+                    if (result.FirstOrDefault() == null)
+                        continue;
+
+                    await msg.UnpinAsync();
+                    await msg.DeleteAsync();
+                }
+            }
+        }
+
         public static async void Post()
         {
             if (toDoList.Count == 0)
                 return;
+
+            var office = ChannelManager.GetTextChannel("🏰 Ty's Mansion", "🚬-ty’s-office");
 
             if (ToDoMessage != null)
                 await ToDoMessage.DeleteAsync();
@@ -94,7 +126,6 @@ namespace Discord_Bot.Core.Moderation
             embed.WithAuthor(author);
             embed.WithDescription(PrintList());
 
-            var office = ChannelManager.GetTextChannel("🏰 Ty's Mansion", "🚬-ty’s-office");
             ToDoMessage = await office.SendMessageAsync("", false, embed.Build());
             await ToDoMessage.PinAsync();
             var pin = (await office.GetMessagesAsync(1).FlattenAsync()).FirstOrDefault();
@@ -129,17 +160,20 @@ namespace Discord_Bot.Core.Moderation
             {
                 if (type == "" || type.ToLowerInvariant() == "post")
                 {
+                    ToDoList.ClearLists();
                     ToDoList.Post();
                 }
 
                 else if (type.ToLowerInvariant() == "add")
                 {
+                    ToDoList.ClearLists();
                     ToDoList.Add(value);
                     ToDoList.SaveList();
                 }
 
                 else if (type.ToLowerInvariant() == "remove")
                 {
+                    ToDoList.ClearLists();
                     ToDoList.Remove(int.Parse(value));
                     ToDoList.SaveList();
                 }
@@ -287,6 +321,7 @@ namespace Discord_Bot.Core.Moderation
 
                                     var channel = await user.GetOrCreateDMChannelAsync();
                                     await channel.SendMessageAsync($"You have been banned from **{guild.Name}** for  `{r}`.");
+
                                     await guild.AddBanAsync(user, 0, r);
                                     
                                     break;
