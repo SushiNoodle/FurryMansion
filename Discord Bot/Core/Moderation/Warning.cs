@@ -5,6 +5,7 @@ using Discord_Bot.Core.Data;
 using Discord_Bot.Modules.Channel_System;
 using Discord_Bot.Modules.Logging_System;
 using Discord_Bot.Modules.Role_System;
+using Discord_Bot.Modules.Voting_System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,7 +27,7 @@ namespace Discord_Bot.Core.Moderation
                 LoggingManager.LogUserWarned((SocketGuildUser)user);
 
                 if (acc.modData.warnings.Count >= 3)
-                    Voting.AddVote((SocketGuildUser)Context.User, "Ban", (SocketGuildUser)user, "3 Warnings : " + reason);
+                    StaffVoting.AddVote((SocketGuildUser)Context.User, "Ban", (SocketGuildUser)user, "3 Warnings : " + reason);
                 else
                     await Context.Channel.SendMessageAsync($"{user.Mention} has been warned for `{r}`. They now have `{acc.modData.warnings.Count}` warnings.");
 
@@ -43,7 +44,7 @@ namespace Discord_Bot.Core.Moderation
 
                 var acc = UserManager.GetAccount((SocketUser)user);
                 if (acc.modData.warnings.Count > 0)
-                    Voting.AddVote((SocketGuildUser)Context.User, "UnWarn", (SocketGuildUser)user, r);
+                    StaffVoting.AddVote((SocketGuildUser)Context.User, "UnWarn", (SocketGuildUser)user, r);
                 else
                     await Context.Channel.SendMessageAsync($"{user.Mention} doesn't have any warnings to be removed.");
             }
