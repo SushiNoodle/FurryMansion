@@ -5,6 +5,7 @@ using Discord_Bot.Core.Data;
 using Discord_Bot.Modules.Channel_System;
 using Discord_Bot.Modules.Logging_System;
 using Discord_Bot.Modules.Role_System;
+using Discord_Bot.Modules.Voting_System;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -39,7 +40,7 @@ namespace Discord_Bot.Core.Moderation
             if (RoleManager.HasModRole((SocketGuildUser)Context.User))
             {
                 string r = reason == "" ? "No reason specified" : reason;
-                Voting.AddVote((SocketGuildUser)Context.User, "Kick", (SocketGuildUser)user, r);
+                StaffVoting.AddVote((SocketGuildUser)Context.User, "Kick", (SocketGuildUser)user, r);
             }
         }
 
