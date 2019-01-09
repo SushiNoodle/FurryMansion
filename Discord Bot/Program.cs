@@ -10,6 +10,7 @@ using Discord_Bot.Modules.Twitter;
 using Discord_Bot.Core.Data;
 using Discord_Bot.Core.Moderation;
 using Discord_Bot.Modules.Logging_System;
+using Discord_Bot.Modules.Voting_System;
 
 namespace Discord_Bot
 {
@@ -216,7 +217,7 @@ namespace Discord_Bot
                 await rMessage.AddReactionAsync(ChannelManager.GetEmote("POGGERS"));
             }
 
-            Voting.HandleStaffVote(reaction);
+            StaffVoting.HandleStaffVote(reaction);
         }
     }
 }

@@ -27,12 +27,20 @@ namespace Discord_Bot.Core
 
             var context = new SocketCommandContext(_client, msg);
 
-            // Mute check
-            if (RoleManager.CheckUserRole((SocketGuildUser)context.User, "Prisoner") &&
-                context.Channel.Name != "⛓-basement-cell")
+            try
             {
-                await context.Message.DeleteAsync();
-                return;
+                // Mute check
+                if (!s.Author.IsWebhook &&
+                    RoleManager.CheckUserRole((SocketGuildUser)context.User, "Prisoner") &&
+                    context.Channel.Name != "⛓-basement-cell")
+                {
+                    await context.Message.DeleteAsync();
+                    return;
+                }
+            }
+            catch
+            {
+
             }
 
             // Command handling
