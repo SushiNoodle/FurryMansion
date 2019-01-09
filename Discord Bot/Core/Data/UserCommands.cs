@@ -700,7 +700,7 @@ namespace Discord_Bot.Core.Data
                 embed.AddField(f);
             }
 
-            var channel = ChannelManager.GetTextChannel("🦄 Roleplay", "🐾-fursonas");
+            var channel = ChannelManager.GetTextChannel("🐾 Plebs", "🐾-fursonas");
 
             var messages = await channel.GetMessagesAsync().FlattenAsync();
             foreach (var msg in messages)
