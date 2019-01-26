@@ -118,6 +118,7 @@ namespace Discord_Bot
         {
             var msg = await arg1.GetOrDownloadAsync();
 
+            // sdf
             if (msg == null)
                 return;
 
