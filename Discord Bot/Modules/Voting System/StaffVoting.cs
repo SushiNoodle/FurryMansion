@@ -78,6 +78,9 @@ namespace Discord_Bot.Modules.Voting_System
         {
             var office = ChannelManager.GetTextChannel("🏰 Ty's Mansion", "🚬-ty’s-office");
 
+            if (reaction.Channel.Id != office.Id)
+                return;
+
             foreach (var vote in StaffVotes)
             {
                 if (vote.Id == reaction.MessageId)
@@ -162,7 +165,6 @@ namespace Discord_Bot.Modules.Voting_System
                                     await channel.SendMessageAsync($"You have been banned from **{guild.Name}** for  `{r}`.");
 
                                     await guild.AddBanAsync(user, 0, r);
-
                                     break;
                                 }
 
@@ -187,9 +189,7 @@ namespace Discord_Bot.Modules.Voting_System
                                     await channel.SendMessageAsync($"You have been kicked from **{guild.Name}** for  `{r}`.");
 
                                     LoggingManager.LogUserKicked((SocketGuildUser)user);
-
                                     await guild.GetUser(user.Id).KickAsync();
-
                                     break;
                                 }
 

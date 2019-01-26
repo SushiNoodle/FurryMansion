@@ -123,7 +123,7 @@ namespace Discord_Bot.Modules.Logging_System
                 }
             }
 
-            var fursona = ChannelManager.GetTextChannel("🦄 Roleplay", "🐾-fursonas");
+            var fursona = ChannelManager.GetTextChannel("🐾 Plebs", "🐾-fursonas");
             var fursona_msgs = await fursona.GetMessagesAsync().FlattenAsync();
             foreach (var msg in fursona_msgs)
             {
