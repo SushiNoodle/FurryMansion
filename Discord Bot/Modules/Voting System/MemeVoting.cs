@@ -116,7 +116,14 @@ namespace Discord_Bot.Modules.Voting_System
                 if (reaction.User.Value.IsBot)
                     return;
 
-                var rMsg = (RestUserMessage) await reaction.Channel.GetMessageAsync(reaction.MessageId);
+                var rMsg = (RestUserMessage)await reaction.Channel.GetMessageAsync(reaction.MessageId);
+
+                if (reaction.UserId == rMsg.Author.Id)
+                {
+                    await rMsg.RemoveReactionAsync(reaction.Emote, rMsg.Author);
+                    await reaction.Channel.SendMessageAsync($"{rMsg.Author.Mention} stop reacting to your own memes you muffin >:C.");
+                    return;
+                }
                 
                 if (rMsg.Attachments.Count == 0)
                     return;

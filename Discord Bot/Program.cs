@@ -110,12 +110,16 @@ namespace Discord_Bot
                 await arg.DeleteAsync();
             }
 
+            NSFWVoting.HandlePost((SocketUserMessage)arg);
             MemeVoting.HandlePost((SocketUserMessage)arg);
         }
 
         private async Task _client_MessageDeleted(Cacheable<IMessage, ulong> arg1, ISocketMessageChannel arg2)
         {
             var msg = await arg1.GetOrDownloadAsync();
+
+            if (msg == null)
+                return;
 
             if (msg.Channel.Name == "🛎-welcome-hall")
             {
