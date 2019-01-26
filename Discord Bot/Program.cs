@@ -29,7 +29,7 @@ namespace Discord_Bot
             _client = new DiscordSocketClient(new DiscordSocketConfig
             {
                 LogLevel = LogSeverity.Verbose,
-                MessageCacheSize = 100
+                MessageCacheSize = 0
 
             });
             _client.Log += Logger;
@@ -109,6 +109,8 @@ namespace Discord_Bot
                 await Task.Delay(2500);
                 await arg.DeleteAsync();
             }
+
+            MemeVoting.HandlePost((SocketUserMessage)arg);
         }
 
         private async Task _client_MessageDeleted(Cacheable<IMessage, ulong> arg1, ISocketMessageChannel arg2)
@@ -211,15 +213,9 @@ namespace Discord_Bot
 
         private async Task OnReactionAdded(Cacheable<IUserMessage, ulong> cache, ISocketMessageChannel channel, SocketReaction reaction)
         {
-            if (reaction.Emote.Name == "POGGERS")
-            {
-                var rMessage = (RestUserMessage)await channel.GetMessageAsync(reaction.MessageId);
-                await rMessage.AddReactionAsync(ChannelManager.GetEmote("POGGERS"));
-            }
-
             StaffVoting.HandleStaffVote(reaction);
             NSFWVoting.HandleVote(reaction);
-
+            MemeVoting.HandleVote(reaction);
         }
     }
 }

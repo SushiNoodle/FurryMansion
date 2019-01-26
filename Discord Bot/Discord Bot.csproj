@@ -352,7 +352,6 @@
   <ItemGroup>
     <Compile Include="Core\CommandHandler.cs" />
     <Compile Include="Config.cs" />
-    <Compile Include="Core\Commands\await.cs" />
     <Compile Include="Core\Commands\Interactions.cs" />
     <Compile Include="Core\Commands\Jokes.cs" />
     <Compile Include="Core\Data\UserAccount.cs" />
@@ -381,6 +380,7 @@
       <DependentUpon>Credentials.resx</DependentUpon>
     </Compile>
     <Compile Include="Modules\Twitter\TwitterManager.cs" />
+    <Compile Include="Modules\Voting System\MemeVoting.cs" />
     <Compile Include="Modules\Voting System\NSFWVoting.cs" />
     <Compile Include="Modules\Voting System\StaffVoting.cs" />
     <Compile Include="Modules\Voting System\SuggestionVoting.cs" />

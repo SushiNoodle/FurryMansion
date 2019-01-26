@@ -44,7 +44,7 @@ namespace Discord_Bot.Modules.Role_System
                 ModRoles = DataStorage.LoadRoles(ModRolesFile).ToList();
             else
             {
-                ModRoles = new List<string> { "🤠 Chief", "⚔️ White Knight", "🤖 Bully Hunter", "🧠 Big Brain" };
+                ModRoles = new List<string> { "🤠 Mafia Boss", "⚔️ White Knight", "🤖 Bully Hunter", "🧠 Alexa" };
                 SaveModRoles();
             }
 
@@ -52,7 +52,7 @@ namespace Discord_Bot.Modules.Role_System
                 AdminRoles = DataStorage.LoadRoles(AdminRolesFile).ToList();
             else
             {
-                AdminRoles = new List<string> { "🤠 Chief", "⚔️ White Knight", "🧠 Big Brain" };
+                AdminRoles = new List<string> { "🤠 Mafia Boss", "⚔️ White Knight", "🧠 Alexa" };
                 SaveAdminRoles();
             }
 

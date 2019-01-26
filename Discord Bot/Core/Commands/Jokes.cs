@@ -17,7 +17,7 @@ namespace Discord_Bot.Core.Commands
         static JokeManager()
         {
             if (DataStorage.SaveExists(jokesFile))
-                jokes = DataStorage.LoadList(jokesFile);
+                jokes = DataStorage.LoadList<string>(jokesFile);
             else
             {
                 jokes = new List<string>();

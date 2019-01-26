@@ -42,7 +42,7 @@ namespace Discord_Bot.Core.Moderation
             try
             {
                 await user.RemoveRoleAsync(RoleManager.GetRole("⚠️ Unverified"));
-                await user.AddRoleAsync(RoleManager.GetRole("✅ Verified"));
+                await user.AddRoleAsync(RoleManager.GetRole("Member"));
             }
             catch
             {
