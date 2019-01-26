@@ -101,7 +101,7 @@ namespace Discord_Bot.Modules.Voting_System
         {
             if (Channels.Contains(msg.Channel.Id))
             {
-                if (msg.Attachments.Count == 0)
+                if (msg.Attachments.Count == 0 && !(msg.Content.Contains("http://") || msg.Content.Contains("https://")))
                     return;
 
                 await msg.AddReactionAsync(ChannelManager.GetEmote("no"));
