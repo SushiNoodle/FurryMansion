@@ -33,17 +33,17 @@ namespace Discord_Bot.Core.Data
             return JsonConvert.DeserializeObject<List<string>>(json);
         }
 
-        public static void SaveList(List<string> list, string filePath)
+        public static void SaveList<T>(List<T> list, string filePath)
         {
             string json = JsonConvert.SerializeObject(list, Formatting.Indented);
             File.WriteAllText(filePath, json);
         }
 
-        public static List<string> LoadList(string filePath)
+        public static List<T> LoadList<T>(string filePath)
         {
             if (!File.Exists(filePath)) return null;
             string json = File.ReadAllText(filePath);
-            return JsonConvert.DeserializeObject<List<string>>(json);
+            return JsonConvert.DeserializeObject<List<T>>(json);
         }
 
         public static bool SaveExists(string filePath)

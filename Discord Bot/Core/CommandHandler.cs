@@ -27,6 +27,9 @@ namespace Discord_Bot.Core
 
             var context = new SocketCommandContext(_client, msg);
 
+            if (s.Author.IsWebhook)
+                return;
+
             // Mute check
             if (RoleManager.CheckUserRole((SocketGuildUser)context.User, "Prisoner") &&
                 context.Channel.Name != "⛓-basement-cell")

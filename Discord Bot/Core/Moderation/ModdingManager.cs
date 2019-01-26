@@ -23,7 +23,7 @@ namespace Discord_Bot.Core.Moderation
         static ToDoList()
         {
             if (DataStorage.SaveExists(todolistFile))
-                toDoList = DataStorage.LoadList(todolistFile);
+                toDoList = DataStorage.LoadList<string>(todolistFile);
             else
             {
                 toDoList = new List<string>();
