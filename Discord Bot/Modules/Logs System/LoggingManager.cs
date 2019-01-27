@@ -273,8 +273,17 @@ namespace Discord_Bot.Modules.Logging_System
         {
             var logs = ChannelManager.GetTextChannel("🏰 Ty's Mansion", "📝-logging");
             var office = ChannelManager.GetTextChannel("🏰 Ty's Mansion", "🚬-ty’s-office");
-            var acc = UserManager.GetAccount(user);
 
+            try
+            {
+                var test = UserManager.GetAccount(user);
+            }
+            catch
+            {
+                return;
+            }
+
+            var acc = UserManager.GetAccount(user);
             if (acc.modData.BanCount() == 0 && acc.modData.SoftBanCount() == 0)
             {
                 var bans = await guild.GetBansAsync();
