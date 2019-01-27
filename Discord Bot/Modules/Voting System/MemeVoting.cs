@@ -104,8 +104,8 @@ namespace Discord_Bot.Modules.Voting_System
                 if (msg.Attachments.Count == 0 && !(msg.Content.Contains("http://") || msg.Content.Contains("https://")))
                     return;
 
-                await msg.AddReactionAsync(ChannelManager.GetEmote("no"));
                 await msg.AddReactionAsync(ChannelManager.GetEmote("yes"));
+                await msg.AddReactionAsync(ChannelManager.GetEmote("no"));
             }
         }
 
@@ -158,15 +158,19 @@ namespace Discord_Bot.Modules.Voting_System
 
                 if (((yes_count + no_count) > (guild.MemberCount * 0.02)))
                 {
+                    var role = guild.GetRole(MemeRoles.FirstOrDefault());
+                    var author = guild.GetUser(rMsg.Author.Id);
+
+                    if (author == null)
+                        return;
+
                     float percentage = (float)yes_count / (float)(yes_count + no_count);
                     if (percentage > 0.6)
                     {
+
                         if (!rMsg.IsPinned)
                         {
                             await rMsg.PinAsync();
-
-                            var role = guild.GetRole(MemeRoles.FirstOrDefault());
-                            var author = guild.GetUser(rMsg.Author.Id);
 
                             if (author.Roles.Contains(role))
                                 return;
@@ -193,9 +197,6 @@ namespace Discord_Bot.Modules.Voting_System
                     {
                         if (rMsg.IsPinned)
                             await rMsg.UnpinAsync();
-
-                        var role = guild.GetRole(MemeRoles.FirstOrDefault());
-                        var author = guild.GetUser(rMsg.Author.Id);
 
                         if (!author.Roles.Contains(role))
                             return;

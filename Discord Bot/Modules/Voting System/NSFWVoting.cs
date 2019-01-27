@@ -118,8 +118,8 @@ namespace Discord_Bot.Modules.Voting_System
                 if (msg.Attachments.Count == 0 && !(msg.Content.Contains("http://") || msg.Content.Contains("https://")))
                     return;
 
-                await msg.AddReactionAsync(ChannelManager.GetEmote("no"));
                 await msg.AddReactionAsync(ChannelManager.GetEmote("yes"));
+                await msg.AddReactionAsync(ChannelManager.GetEmote("no"));
             }
         }
 

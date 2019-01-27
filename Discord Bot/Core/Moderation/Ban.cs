@@ -16,8 +16,26 @@ namespace Discord_Bot.Core.Moderation
         [Command("ban")]
         public async Task Ban(IGuildUser user, [Remainder]string reason = "")
         {
-            if (RoleManager.HasAdminRole((SocketGuildUser)Context.User) ||
-                (RoleManager.HasModRole((SocketGuildUser)Context.User) && (Context.Channel.Name == ":bellhop:-welcome-hall")))
+            bool perms = RoleManager.HasAdminRole((SocketGuildUser)Context.User);
+            bool welcomer = false;
+            bool unverified = false;
+            if (!perms)
+            {
+                var staff = (SocketGuildUser)Context.User;
+                foreach (var role in staff.Roles)
+                {
+                    if ((role.Id == 495831983864414209) || (role.Id == 496554829079117836))
+                    {
+                        welcomer = true;
+                        break;
+                    }
+
+                }
+
+                unverified = user.RoleIds.Contains(RoleManager.GetRole("⚠️ Unverified").Id);
+            }
+            
+            if (perms || (welcomer && unverified))
             {
                 string r = reason == "" ? "No reason specified" : reason;
                 var acc = UserManager.GetAccount((SocketUser)user);

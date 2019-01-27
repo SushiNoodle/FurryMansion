@@ -275,6 +275,22 @@ namespace Discord_Bot.Modules.Logging_System
             var office = ChannelManager.GetTextChannel("🏰 Ty's Mansion", "🚬-ty’s-office");
             var acc = UserManager.GetAccount(user);
 
+            if (acc.modData.BanCount() == 0 && acc.modData.SoftBanCount() == 0)
+            {
+                var bans = await guild.GetBansAsync();
+                foreach (var b in bans)
+                {
+                    if (b.User.Id == user.Id)
+                    {
+                        string r = b.Reason == "" ? "No reason specified" : b.Reason;
+                        acc.modData.bans.Add(new ModData.PenaltyData(Global.DiscordBotID, Utilities.GetDate(), r));
+                        acc.modData.banned = true;
+                        UserManager.SaveAccounts();
+                    }
+                }
+
+            }
+
             bool isBan = acc.modData.BanCount() != 0;
             var ban = isBan ? acc.modData.bans[acc.modData.BanCount() - 1] : acc.modData.softBans[acc.modData.SoftBanCount() - 1];
             var staff = guild.GetUser(ban.staff);
